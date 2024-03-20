@@ -1,131 +1,167 @@
 "use client";
-import Image from "next/image";
 import React, { useState } from "react";
-import PhoneInput, { CountryData } from "react-phone-input-2";
-import Swal from "sweetalert2";
+import Image from "next/image";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 export default function Home() {
   const groupImageUrl = "/Group 2496.png";
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setcountryCode] = useState("");
-  const [isValid, setIsValid] = useState(true);
-  const [phoneNumberEntered, setPhoneNumberEntered] = useState(false); 
-  const [otpEntered, setOtpEntered] = useState(false); 
-  const [otp, setOtp] = useState(""); 
-  const isCountryData = (obj: any): obj is CountryData => {
-    return "dialCode" in obj;
-  };
+  const [otpEntered, setOtpEntered] = useState(false);
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOtp(e.target.value);
-    setOtpEntered(e.target.value.length > 0); 
-  };
-
-  const handleGetOtpClick = () => {
-   
-    console.log("OTP:", otp);
-  };
-
-  const handlePhoneNumberChange = (
-    inputValue: string,
-    country: {} | CountryData
-  ) => {
-    if (!isCountryData(country)) {
-      return Swal.fire({
-        title: "Country Code Error",
-        text: "Country code is not right.",
-      });
+  const handleOtpChange = (e) => {
+    if (e.target.value.length === 6) {
+      setOtpEntered(true);
+    } else {
+      setOtpEntered(false);
     }
-    setPhoneNumber(inputValue);
-    setcountryCode(country.dialCode);
+  };
 
-    setIsValid(phoneNumber.length >= 11);
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000, 
+    
   };
 
   return (
-    <div className="flex justify-center items-center h-screen overflow-hidden">
-      <div className="hidden md:flex mr-auto w-[50%] flex-col justify-between bg-white">
+    <div className="flex flex-col md:flex-row justify-center items-center h-screen overflow-hidden bg-[#F0F3FC] 2xl:w-full ">
+      {/* Left Section */}
+      <div className="md:w-[50%] h-[770px] flex flex-col justify-between bg-white">
         <div className="flex justify-center items-center mt-6">
           <img
-            src="/logomain.svg"
+            src="/Frame.svg"
             alt="Logo"
-            className="w-52 ml-[275px] mt-[90px]"
+            className="w-52 mx-auto my-10 md:mx-[230px] md:mt-[20px] "
           />
+          <Image
+            src={groupImageUrl}
+            alt="Vector"
+            width={48}
+            height={4}
+            className="ml-auto"
+          />
+        </div>
 
-          <img
-            src={groupImageUrl}
-            alt="Vector"
-            className="w-12 h-4px max-w-xs mt-[87px] ml-auto"
-          />
-        </div>
-        <div className="flex justify-center items-center">
-          <img
-            src={groupImageUrl}
-            alt="Vector"
-            className="w-12 h-4px max-w-xs mt-[140px] mr-auto"
-          />
-          <img
-            src="/main.png"
-            alt="Main"
-            className="w-[420px] mt-[36px] item-center mr-[180px]"
-          />
-        </div>
+        {/* Carousel */}
+        <Slider {...settings} className="w-full">   
+          <div>
+            <Image
+              src="/main.svg"
+              alt="Main"
+              width={280}
+              height={324}
+              className="mb-[4px] max-w-[280px] md:max-w-[540px] mx-auto xl:mx-[200px]"
+            />
+            <div className="text-center font-serif text-2xl mt-[10px]">
+              <p className="mb-[12px]">
+                Share your thoughts on products, services, and experiences
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <Image
+              src="/main2.svg"
+              alt="Main 2"
+              width={280}
+              height={324}
+              className="mb-[4px] max-w-[280px] md:max-w-[540px] mx-auto xl:mx-[200px]"
+            />
+            <div className="text-center font-serif text-2xl mt-[10px]">
+              <p className="mb-[12px]">
+                Keep Track of your wallet balance in real time
+              </p>
+            </div>
+          </div>
+          <div>
+            <Image
+              src="/main3.svg"
+              alt="Main 2"
+              width={280}
+              height={324}
+              className="mb-[4px] max-w-[280px] md:max-w-[540px] mx-auto xl:mx-[200px]"
+            />
+            <div className="text-center font-serif text-2xl mt-[10px]">
+              <p className="mb-[12px]">
+              Engage & earn exciting rewards
+              </p>
+            </div>
+          </div>
+        </Slider>
+
         <div className="flex items-center">
-          <img
+          <Image
             src="/Vector 13.svg"
             alt="Image"
-            className="w-full max-w-screen-lg h-200 cursor-pointer"
+            layout="responsive"
+            width={800}
+            height={10}
+            className="cursor-pointer"
           />
         </div>
       </div>
 
-      <div className="hidden md:flex justify-center items-center w-[50%]">
-      <div className="w-full">
-        <div className="flex justify-center items-center mb-300px">
-          <h1 className="text-2xl  font-custom font-bold">
-            Login to Account
-          </h1>
-        </div>
-        <div className="flex justify-center items-center mb-350px">
-          <h1 className="text-1xl font-bold">
-            Enter your credentials to access your account
-          </h1>
-        </div>
-        <div className="flex justify-center items-center mb-4">
-          <h3>{phoneNumberEntered ? "Enter" : ""} Phone No.</h3>
-          <>
-            <PhoneInput
-              country={"in"}
-              enableSearch={true}
-              value={phoneNumber}
-              onChange={(value, country) =>
-                handlePhoneNumberChange(value, country)
-              }
-              inputStyle={{ width: "100%", height: "70%" }}
-            />
-          </>
-        </div>
-        {phoneNumberEntered && (
-          <div className="flex justify-center items-center mb-4">
-            <h3>Enter OTP</h3>
-            <input
-              type="text"
-              value={otp}
-              onChange={handleOtpChange}
-              className="border border-gray-300 rounded-md px-3 py-1 ml-2"
-            />
-            <button
-              className={`ml-2 px-4 py-2 rounded-md ${
-                otpEntered ? "bg-purple-600 text-white" : "bg-purple-300"
-              }`}
-              onClick={handleGetOtpClick}
-            >
-              {otpEntered ? "Get OTP" : "Enter OTP"}
-            </button>
+      {/* Right Section */}
+      <div className="md:w-[50%] mt-[50px] flex justify-center items-center  ">
+        <div className="w-full md:w-auto">
+          <div className="flex flex-col justify-center items-center md:items-start md:ml-[100px] mb-16">
+            <h1 className="text-2xl font-custom ml-[60px] font-bold text-center md:text-center">
+              Login to Account
+            </h1>
+            <h1 className="text-1xl font-bold text-center md:text-center">
+              Enter your credentials to access your account
+            </h1>
+            <br />
+            <div className="mb-8">
+              <h3 className="text-center md:text-left">Enter Mobile No.</h3>
+              <input
+                type="tel"
+                id="mobile"
+                name="mobile"
+                pattern="[0-9]{10}"
+                maxLength={13}
+                placeholder="+91"
+                required
+                className="h-12 rounded-lg border border-gray-300 px-4"
+              />
+            </div>
+            <div className="mb-8">
+              <h3 className="text-center md:text-left">Enter OTP</h3>
+              <input
+                type="tel"
+                id="otp"
+                name="otp"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                placeholder="Enter OTP"
+                required
+                className="h-12 rounded-lg border border-gray-300 px-4"
+                onChange={handleOtpChange}
+              />
+            </div>
+            <div className="flex justify-center">
+              <button
+                className={`h-12 w-full md:w-60 rounded-lg text-white font-semibold ${
+                  otpEntered ? "bg-purple-400" : "bg-purple-300"
+                }`}
+              >
+                {otpEntered ? "Verify OTP" : "Get OTP"}
+              </button>
+            </div>
+            <div className="flex justify-center mt-8 ml-12">
+              <h1 className="text-black-600 cursor-pointer underline">
+                Continue to User
+              </h1>
+            </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
     </div>
   );
 }
